@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="signalr/hubs" ></script>
+    <script  >
+        $(function () {
+
+            name = prompt("enter your name");
+            // limit hub
+             prox = $.connection.chatHub;
+
+            // start new connection
+            $.connection.hub.start();
+
+
+            //subscribe call back method sendmessage
+            prox.client.newMessage = function (name, message) {
+                $("ul").append("<li>" + name + " : " + message + "</li>")
+            }
+
+        })
+
+        function send() {
+            prox.server.sendMessage(name, $("#txt").val() )
+        }
+    </script>
+
+
+</head>
+<body>
+    <input type="text" id="txt"/>
+    <input type="submit" value="send" onclick="send()"/>
+    <ul>
+        <li>message</li>
+
+    </ul>
+</body>
+</html>
