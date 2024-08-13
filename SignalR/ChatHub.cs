@@ -12,7 +12,7 @@ namespace SignalR
 
             // save in db 
             // do some logic 
-            Clients.Others.newMessage(name, inputMessage);
+            Clients.All.newMessage(name, inputMessage);
         }
 
         public void joinGroup(string groupName, string clientName)
