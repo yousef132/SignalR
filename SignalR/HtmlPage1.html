@@ -7,25 +7,67 @@
     <script src="Scripts/jquery.signalR-2.4.3.min.js"></script>
     <script src="signalr/hubs" ></script>
     <script  >
+
+        /// With Default Proxy
+        //$(function () {
+
+        //    name = prompt("enter your name");
+        //    // limit hub
+        //     prox = $.connection.chatHub;
+
+        //    // start new connection
+        //    $.connection.hub.start();
+
+
+        //    //subscribe call back method sendmessage
+        //    prox.client.newMessage = function (name, message) {
+        //        alert("Handler Method")
+        //        $("ul").append("<li>" + name + " : " + message + "</li>")
+        //    }
+
+        //})
+
+        // With User Defined Proxy
+
         $(function () {
 
             name = prompt("enter your name");
-            // limit hub
-             prox = $.connection.chatHub;
 
-            // start new connection
-            $.connection.hub.start();
+            // define connection
+            var con = $.hubConnection();// use server service url if it was remote
 
+            //                          hub name
+            prox = con.createHubProxy("chatHub");
+
+            // start connection
+            con.start();
 
             //subscribe call back method sendmessage
-            prox.client.newMessage = function (name, message) {
+            //       even name
+            prox.on("newMessage", function (name, message) {
+                alert("Handler Method")
                 $("ul").append("<li>" + name + " : " + message + "</li>")
-            }
+            })
 
+            prox.on("joinGroup", function (clientName, groupName) {
+                $("ul").append("<li>" + clientName + "  Joined  " + groupName + "</li>")
+            })
+            prox.on("sendGroup", function (clientName, message) {
+
+                $("ul").append("<li>" + clientName + " Sent :=>   " + message + "</li>")
+            })
         })
-
         function send() {
-            prox.server.sendMessage(name, $("#txt").val() )
+            prox.invoke("sendMessage", name, $("#txt").val())
+        }
+
+
+        function join() {
+            prox.invoke("joinGroup", $("#gtxt").val(),name);
+        }
+
+        function sendGroup() {
+            prox.invoke("sendGroup", $("#gtxt").val(), name, $("#txt").val());
         }
     </script>
 
@@ -34,6 +76,16 @@
 <body>
     <input type="text" id="txt"/>
     <input type="submit" value="send" onclick="send()"/>
+    <br />
+
+    <input type="text" id="gtxt"/>
+    <input type="submit" value="join" onclick="join()"/>
+
+
+
+    <input type="submit" id="mtxt"  onclick="sendGroup()"/>
+
+
     <ul>
         <li>message</li>
 
