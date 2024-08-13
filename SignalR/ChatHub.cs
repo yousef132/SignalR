@@ -8,11 +8,9 @@ namespace SignalR
     {
         public void sendMessage(string name, string inputMessage)
         {
-
-
             // save in db 
             // do some logic 
-            Clients.All.newMessage(name, inputMessage);
+            Clients.Others.newMessage(name, inputMessage);
         }
 
         public void joinGroup(string groupName, string clientName)
